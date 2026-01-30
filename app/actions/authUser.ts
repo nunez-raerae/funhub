@@ -1,6 +1,5 @@
 "use server";
 import { auth } from "@/lib/auth";
-import { log } from "console";
 import { redirect } from "next/navigation";
 
 export async function signUpAction(formdata: FormData) {
@@ -17,4 +16,17 @@ export async function signUpAction(formdata: FormData) {
   });
 
   redirect("/login");
+}
+
+export async function loginAction(formdata: FormData) {
+  const email = formdata.get("email") as string;
+  const password = formdata.get("password") as string;
+
+  await auth.api.signInEmail({
+    body: {
+      email,
+      password,
+    },
+  });
+  redirect("/");
 }
