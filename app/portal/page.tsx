@@ -3,27 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import {
-  ArrowBigLeftDashIcon,
-  ArrowBigRightIcon,
-  ArrowRightCircleIcon,
-  ArrowRightFromLineIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  BatteryFullIcon,
-  BrickWallShieldIcon,
-  CableIcon,
-  CircleFadingArrowUpIcon,
-  Code2,
-  LayoutGrid,
-  LayoutListIcon,
-} from "lucide-react";
+import prisma from "@/lib/prisma";
+import { ArrowRightIcon, LayoutGrid } from "lucide-react";
+import Image from "next/image";
 
 const iconColors = [
   "text-slate-600 dark:text-slate-400",
@@ -39,7 +25,9 @@ const getRandomColor = (index: number) => {
   return iconColors[index % iconColors.length];
 };
 
-export default function PortalPage() {
+export default async function PortalPage() {
+  const data = await prisma.funHubCategory.findMany();
+
   return (
     <>
       <TopBar />
@@ -83,21 +71,22 @@ export default function PortalPage() {
       </div>
       <div className="sticky top-16 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex space-x-4 overflow-x-auto px-6 py-4 scrollbar-hide">
-          <Button variant="outline" className="flex-shrink-0">
-            <LayoutGrid className="mr-2 h-4 w-4" /> All Applications
-          </Button>
-          <Button variant="outline" className="flex-shrink-0">
-            <BatteryFullIcon className="mr-2 h-4 w-4" /> Productivity
-          </Button>
-          <Button variant="outline" className="flex-shrink-0">
-            <Code2 className="mr-2 h-4 w-4" /> Development
-          </Button>
-          <Button variant="outline" className="flex-shrink-0">
-            <BrickWallShieldIcon className="mr-2 h-4 w-4" /> Security
-          </Button>
-          <Button variant="outline" className="flex-shrink-0">
-            <CableIcon className="mr-2 h-4 w-4" /> API Tools
-          </Button>
+          {data.map((category) => (
+            <Button
+              key={category.id}
+              variant="outline"
+              className="flex-shrink-0"
+            >
+              <Image
+                className="dark:invert"
+                alt={category.name}
+                src={category.imageUrl || ""}
+                width={16}
+                height={16}
+              />
+              {category.name}
+            </Button>
+          ))}
         </div>
       </div>
       {/* Sample Content Sections */}
@@ -132,6 +121,14 @@ export default function PortalPage() {
                   <ArrowRightIcon className="h-5 w-5" />
                 </Button>
               </div>
+              <CardFooter className="mt-[-20px] px-4 flex justify-between items-center">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-muted-foreground"
+                >
+                  #Free
+                </Badge>
+              </CardFooter>
             </Card>
           ))}
         </div>

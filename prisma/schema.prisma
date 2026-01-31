@@ -75,3 +75,28 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+model FunHubCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("funhub_category")
+  funHubApplications FunHubApplication[]
+}
+
+model FunHubApplication {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  url         String          @unique
+  imageUrl    String?
+  categoryId  Int
+  category    FunHubCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("funhub_application")
+}
