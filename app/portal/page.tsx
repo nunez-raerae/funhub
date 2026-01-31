@@ -27,6 +27,16 @@ const getRandomColor = (index: number) => {
 
 export default async function PortalPage() {
   const data = await prisma.funHubCategory.findMany();
+  const app = await prisma.funHubApplication.findMany({
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  console.log(app);
 
   return (
     <>
@@ -95,7 +105,42 @@ export default async function PortalPage() {
           <p className="px-6 text-2xl font-bold mb-4">Applications</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-6 pb-6 pt-2">
-          {Array.from({ length: 50 }).map((_, i) => (
+          {app.map((application, i) => (
+            <Card key={i} className="min-h-[200px] group relative">
+              <div className="p-4 flex flex-row items-start gap-4 justify-between">
+                <div className="h-12 w-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out group-hover:scale-110">
+                  <LayoutGrid className={`h-10 w-10 ${getRandomColor(i)}`} />
+                </div>
+                <Badge variant="secondary" className="mt-1">
+                  {application.category.name}
+                </Badge>
+              </div>
+              <CardHeader className="mt-[-20px] px-4">
+                <CardDescription>
+                  <h2 className="text-lg font-semibold mb-2">
+                    {application.name}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {application.description}
+                  </p>
+                </CardDescription>
+              </CardHeader>
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Button variant="outline" size="icon" aria-label="Open">
+                  <ArrowRightIcon className="h-5 w-5" />
+                </Button>
+              </div>
+              <CardFooter className="mt-[-20px] px-4 flex justify-between items-center">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-muted-foreground"
+                >
+                  #{application.status}
+                </Badge>
+              </CardFooter>
+            </Card>
+          ))}
+          {/* {Array.from({ length: 50 }).map((_, i) => (
             <Card key={i} className="min-h-[200px] group relative">
               <div className="p-4 flex flex-row items-start gap-4 justify-between">
                 <div className="h-12 w-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out group-hover:scale-110">
@@ -130,7 +175,7 @@ export default async function PortalPage() {
                 </Badge>
               </CardFooter>
             </Card>
-          ))}
+          ))} */}
         </div>
       </div>
       {/* Bottom spacing */}
