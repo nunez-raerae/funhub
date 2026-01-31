@@ -14,7 +14,6 @@ export async function signUpAction(formdata: FormData) {
       password,
     },
   });
-
   redirect("/login");
 }
 
@@ -28,5 +27,6 @@ export async function loginAction(formdata: FormData) {
       password,
     },
   });
+
   redirect("/");
 }
