@@ -86,7 +86,12 @@ model FunHubCategory {
   @@map("funhub_category")
   funHubApplications FunHubApplication[]
 }
-
+enum FunHubApplicationStatus {
+  Active
+  Inactive
+  Archived
+  Maintenance
+}
 model FunHubApplication {
   id          Int          @id @default(autoincrement())
   name        String
@@ -94,6 +99,7 @@ model FunHubApplication {
   url         String          @unique
   imageUrl    String?
   categoryId  Int
+  status      FunHubApplicationStatus @default(Active)
   category    FunHubCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
