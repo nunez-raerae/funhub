@@ -7,9 +7,13 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+
 import prisma from "@/lib/prisma";
 import { ArrowRightIcon, LayoutGrid } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 const iconColors = [
   "text-slate-600 dark:text-slate-400",
@@ -26,6 +30,14 @@ const getRandomColor = (index: number) => {
 };
 
 export default async function PortalPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const data = await prisma.funHubCategory.findMany();
   const app = await prisma.funHubApplication.findMany({
     include: {
@@ -36,11 +48,10 @@ export default async function PortalPage() {
       },
     },
   });
-  console.log(app);
 
   return (
     <>
-      <TopBar />
+      <TopBar user={session.user} />
 
       <div className="p-6">
         <h2 className="text-3xl font-bold ">Recommended for you</h2>
@@ -106,7 +117,7 @@ export default async function PortalPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-6 pb-6 pt-2">
           {app.map((application, i) => (
-            <Card key={i} className="min-h-[200px] group relative">
+            <Card key={application.id} className="min-h-[200px] group relative">
               <div className="p-4 flex flex-row items-start gap-4 justify-between">
                 <div className="h-12 w-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ease-in-out group-hover:scale-110">
                   <LayoutGrid className={`h-10 w-10 ${getRandomColor(i)}`} />
