@@ -18,6 +18,7 @@ import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 import { getUserInitials, UserProfile } from "./user-profile";
 import { User } from "better-auth";
+import Link from "next/link";
 
 interface TopBarProps {
   user: User;
@@ -78,7 +79,11 @@ export default function TopBar({ user }: { user: TopBarProps["user"] }) {
                   <UserProfile user={user} />
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/portal/profile" className="w-full">
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
               </DropdownMenuGroup>
