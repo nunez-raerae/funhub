@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/lib/auth";
+import { makeIdenticonDataUrl } from "@/lib/profile-gen";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -8,14 +9,17 @@ export async function signUpAction(formdata: FormData) {
   const email = formdata.get("email") as string;
   const password = formdata.get("password") as string;
 
+  const profileImg = makeIdenticonDataUrl(name, 128);
+
   await auth.api.signUpEmail({
     body: {
+      image: profileImg,
       name,
       email,
       password,
     },
   });
-  redirect("/login");
+  redirect("/portal");
 }
 
 export async function loginAction(formdata: FormData) {
