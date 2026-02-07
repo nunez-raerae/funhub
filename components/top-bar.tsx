@@ -79,7 +79,7 @@ export default function TopBar({ user }: { user: TopBarProps["user"] }) {
                   <UserProfile user={user} />
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link href="/portal/profile" className="w-full">
                     Profile
                   </Link>
