@@ -9,26 +9,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
-import {
-  InfoIcon,
-  LayoutGrid,
-  LogOut,
-  Search,
-  Settings,
-  Sparkles,
-  User,
-} from "lucide-react";
+import { LayoutGrid, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ModeToggle } from "./theme-switch";
-import { Field, FieldLabel } from "./ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from "./ui/input-group";
+import { Field } from "./ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
+import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
+import { UserProfile } from "./user-profile";
+import { User } from "better-auth";
 
-export default function TopBar() {
+interface TopBarProps {
+  user: User;
+}
+
+export default function TopBar({ user }: { user: TopBarProps["user"] }) {
+  const handleLogout = async () => {
+    await authClient.signOut();
+    redirect("/login");
+  };
+
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center px-6 justify-between">
@@ -75,21 +75,7 @@ export default function TopBar() {
             <DropdownMenuContent className="w-50 bg-popover" align="center">
               <DropdownMenuGroup>
                 <DropdownMenuLabel>
-                  <div className="flex flex-row gap-2 items-center">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="shadcn"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col justify-center">
-                      <span className="font-medium">shadcn</span>
-                      <span className="text-xs text-muted-foreground">
-                        shadcn@example.com
-                      </span>
-                    </div>
-                  </div>
+                  <UserProfile user={user} />
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -98,7 +84,7 @@ export default function TopBar() {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem variant="destructive" onClick={handleLogout}>
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuGroup>
