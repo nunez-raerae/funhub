@@ -21,12 +21,16 @@ export async function loginAction(formdata: FormData) {
   const email = formdata.get("email") as string;
   const password = formdata.get("password") as string;
 
-  await auth.api.signInEmail({
-    body: {
-      email,
-      password,
-    },
-  });
-
-  redirect("/");
+  try {
+    await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+      },
+    });
+  } catch (error) {
+    console.error("Login failed:", error);
+    redirect("/login?error=Invalid credentials");
+  }
+  redirect("/portal");
 }
