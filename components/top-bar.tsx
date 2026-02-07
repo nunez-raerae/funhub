@@ -16,7 +16,7 @@ import { Field } from "./ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
-import { UserProfile } from "./user-profile";
+import { getUserInitials, UserProfile } from "./user-profile";
 import { User } from "better-auth";
 
 interface TopBarProps {
@@ -64,10 +64,10 @@ export default function TopBar({ user }: { user: TopBarProps["user"] }) {
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar>
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="shadcn"
+                    src={user.image || ""}
+                    alt={user.name || "User"}
                   />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
