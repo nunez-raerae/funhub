@@ -75,3 +75,13 @@ export async function changePasswordAction(formdata: FormData) {
 
   redirect("/portal");
 }
+
+export async function changeProfileAction() {
+  await auth.api.updateUser({
+    headers: await headers(),
+    body: {
+      image: makeIdenticonDataUrl(String(Date.now())),
+    },
+  });
+  redirect("/portal");
+}
